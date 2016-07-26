@@ -3,6 +3,8 @@ import gUtil from 'gulp-util';
 import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
 import genConfig from './webpack.config.js';
+import publish from 'gulp-oss-publish';
+import secret from './secret.json';
 
 const PORT = 2016;
 const dist = 'build';
@@ -10,6 +12,28 @@ const env = {
   publicPath: `http://127.0.0.1:${PORT}/`
 };
 
+
+gulp.task('publish', () =>
+  gulp
+    .src('build/**/*', {
+      base: 'build',
+      buffer: true
+    })
+    .pipe(publish({
+      prefix: 'code-whiteboard',
+      genShortId: false,
+      oss: {
+        accessKeyId: secret.ossAcessKeyId,
+        secretAccessKey: secret.ossAcessKey,
+        endpoint: 'http://oss-cn-hangzhou.aliyuncs.com',
+        bucket: 'witcher'
+      },
+      headers: {
+        CacheControl: 'no-cache',
+        ServerSideEncryption: 'AES256'
+      }
+    }))
+);
 
 gulp.task('build', (cb) => {
   webpack(genConfig({

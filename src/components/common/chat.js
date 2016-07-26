@@ -17,10 +17,22 @@ class Chat extends Component {
     this.setState({message})
   }
 
+  doHandleKeyPress(e) {
+    if(e.charCode == 13) {
+      e.preventDefault();
+      this.doSendMessage();
+    }
+  }
+
   doSendMessage() {
     let {onMessage} = this.props;
     let {message} = this.state;
-    onMessage(message);
+    if(message){
+      onMessage(message);
+      this.setState({
+        message: ''
+      })
+    }
   }
 
   getStyles() {
@@ -82,10 +94,12 @@ class Chat extends Component {
             <Col md={9}>
               <FormControl type="text" placeholder="发言"
                            value={message}
-                           onChange={e=>this.doChangeMessage(e.target.value)}/>
+                           onChange={e=>this.doChangeMessage(e.target.value)}
+                           onKeyPress={e=>this.doHandleKeyPress(e)}
+              />
             </Col>
             <Col componentClass={ControlLabel} md={3}>
-              <Button bsStyle="primary" style={styles.submitButton} onClick={()=>this.doSendMessage()}>发送</Button>
+              <Button disabled={!message} bsStyle="primary" style={styles.submitButton} onClick={()=>this.doSendMessage()}>发送</Button>
             </Col>
           </FormGroup>
         </Form>

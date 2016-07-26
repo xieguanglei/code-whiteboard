@@ -39,7 +39,7 @@ class Party extends Component {
       },
       codeEditor: {
         marginRight: 405,
-        height: '100%',
+        height: mainHeight - 12,
         padding: padding
       },
       rightCol: {
