@@ -7,6 +7,7 @@ import Party from './common/party';
 import CodeEditor from './common/codeEditor';
 import NameList from './common/nameList';
 import Chat from './common/chat';
+import ClipButton from './common/clip-button';
 import login from './utils/login';
 
 let STAGE_LOGIN = 1;
@@ -30,11 +31,9 @@ class OwnerApp extends Component {
         this.setState({
           stage: STAGE_CREATEPARTY
         });
-
         //setTimeout(()=>{
-        //  this.doCreateParty({partyName: 'party', ownerName: 'xie'});
+        //  this.doCreateParty({partyName: 'party', ownerName: 'name'});
         //}, 500)
-
       }
     });
   }
@@ -90,7 +89,7 @@ class OwnerApp extends Component {
             <CodeEditor codeText={codeText} onChange={t=>this.doChangeCode(t)}/>
             <NameList ownerName={ownerName} users={users}/>
             <Chat clientSize={clientSize} messages={messages} onMessage={message=>this.doSubmitMessage(message)}/>
-            <div>将下面这条记录复制给你的朋友们,一起加入这场派对吧:{`${location.href}?party=${this.partyRef.key()}`}</div>
+            <div>点击 <ClipButton value={`${location.href}?party=${this.partyRef.key()}`}/> 发给你的朋友们，请他们也来参加派对！</div>
           </Party>
         );
       default:

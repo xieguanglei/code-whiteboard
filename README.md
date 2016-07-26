@@ -1,5 +1,7 @@
-# Code Whiteboard
+# 代码白板
 
-You write code, and others watch.
+实时的「代码白板」，可聊天。远程面试、远程解答问题的得力助手。
 
-Visit [live demo](https://xieguanglei.github.io/code-whiteboard).
+[地址](https://xieguanglei.github.io/code-whiteboard)。
+
+[墙内地址](http://witcher.oss-cn-hangzhou.aliyuncs.com/code-whiteboard/index.html)。
