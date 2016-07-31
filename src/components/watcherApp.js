@@ -41,38 +41,57 @@ class WatcherApp extends Component {
 
       }
     });
-  }
 
-  doSubmitName(e){
-    this.userRef = this.partyRef.child('users').push(e.name, ()=>{
-
-      this.setState({
-        stage: STAGE_PARTY,
-        name: e.name
-      });
-
-      this.userRef.onDisconnect().remove();
-    });
-
-  }
-
-  doChangeCode(codeText) {
-    this.setState({
-      codeText
-    }, ()=> {
-      this.partyRef.child('codeText').set(codeText);
+    this.wdRef.on('child_removed', s=> {
+      let party = s.val();
+      let {partyName: p1, ownerName: o1} = party;
+      let {partyName: p2, ownerName: o2} = this.state;
+      if(p1 === p2 && o1 == o2) {
+        this.setState({closed: true})
+      }
     })
   }
 
+  doSubmitName(e){
+
+    if(!this.state.closed) {
+      this.userRef = this.partyRef.child('users').push(e.name, ()=> {
+
+        this.setState({
+          stage: STAGE_PARTY,
+          name: e.name
+        });
+
+        this.userRef.onDisconnect().remove();
+      });
+    }
+  }
+
+  doChangeCode(codeText) {
+
+    if(!this.state.closed) {
+      this.setState({
+        codeText
+      }, ()=> {
+        this.partyRef.child('codeText').set(codeText);
+      })
+    }
+
+  }
+
   doSubmitMessage(message) {
-    let {name, messages=[]} = this.state;
-    this.partyRef.child('messages').set([...messages, {name, message}]);
+
+    if(!this.state.closed) {
+      let {name, messages=[]} = this.state;
+      this.partyRef.child('messages').set([...messages, {name, message}]);
+    }
+
   }
 
   render() {
 
     let {clientSize} = this.props;
-    let {stage, codeText, users, ownerName, messages} = this.state;
+    let {stage, codeText, users, ownerName, messages, closed} = this.state;
 
     switch (stage){
       case STAGE_LOGIN:
@@ -85,7 +104,10 @@ class WatcherApp extends Component {
             <CodeEditor codeText={codeText} onChange={t=>this.doChangeCode(t)}/>
             <NameList ownerName={ownerName} users={users}/>
             <Chat clientSize={clientSize} messages={messages} onMessage={message=>this.doSubmitMessage(message)}/>
-            <div>你正在参加一场 party</div>
+            {
+              closed ? <div style={{color: 'red'}}>举办者{ownerName}已离开，派对结束了。</div> :
+                <div>你正在参加{ownerName}的派对。</div>
+            }
           </Party>
         );
       default:
